@@ -1,0 +1,22 @@
+{
+  "metadata": {
+    "company": "Cedar Home Services",
+    "workspace_id": "cedar-demo",
+    "synthetic": true,
+    "version": "2026-09-27",
+    "provenance": "Curated fictional policy copy for the synthetic demo; not a real business offer"
+  },
+  "articles": [
+    {"id": "boiler-service", "source": "kb:boiler-service", "service_id": "boiler-service", "title": "Boiler service", "body": "A residential boiler service is a 90-minute maintenance visit with a starting labor price of $189. An on-site technician confirms any additional parts or work before proceeding. Appointments require a service address in an eligible zone and a currently available qualified technician."},
+    {"id": "heating-repair", "source": "kb:heating-repair", "service_id": "heating-repair", "title": "Heating repair", "body": "A heating repair visit is scheduled for 120 minutes and starts at $229 for diagnosis and routine labor. Parts and additional work are quoted after inspection. This is not an emergency dispatch service."},
+    {"id": "plumbing-repair", "source": "kb:plumbing-repair", "service_id": "plumbing-repair", "title": "Plumbing repair", "body": "Accessible residential pipe, tap, and fixture repairs are scheduled for 90 minutes and start at $159. Hidden leaks or larger repairs may need a new quote or specialist follow-up."},
+    {"id": "drain-clearing", "source": "kb:drain-clearing", "service_id": "drain-clearing", "title": "Drain clearing", "body": "Routine sink or tub drain clearing is scheduled for 60 minutes and starts at $139. Main sewer line work is outside this service and should be sent to the operator for review."},
+    {"id": "electrical-diagnostic", "source": "kb:electrical-diagnostic", "service_id": "electrical-diagnostic", "title": "Electrical diagnostic", "body": "A residential electrical diagnostic is scheduled for 90 minutes and starts at $179. Major rewiring and urgent electrical hazards are outside online booking; the operator can review those requests."},
+    {"id": "appliance-repair", "source": "kb:appliance-repair", "service_id": "appliance-repair", "title": "Appliance repair", "body": "Washer, dryer, and dishwasher diagnosis is scheduled for 120 minutes and starts at $169. The appliance repair service is available in Central and North Maple County only."},
+    {"id": "roof-inspection", "source": "kb:roof-inspection", "service_id": "roof-inspection", "title": "Roof inspection", "body": "A visual inspection of an accessible residential roof is scheduled for 120 minutes and starts at $249. Roof inspection is offered in Central and South Maple County only. Unsafe access or storm damage may require operator review."},
+    {"id": "general-maintenance", "source": "kb:general-maintenance", "service_id": "general-maintenance", "title": "General maintenance", "body": "Small household repairs suitable for one visit are scheduled for 60 minutes and start at $119. The operator reviews work that needs several trades or unusually large materials."},
+    {"id": "service-zones", "source": "kb:service-zones", "title": "Service zones and travel fees", "body": "Cedar serves Central, North, and South Maple County in this synthetic demo. Central has no travel fee; North adds $15 and South adds $20. The exact service address and qualified staff availability determine whether an appointment can be offered."},
+    {"id": "booking-policy", "source": "kb:booking-policy", "title": "Booking, changes, and cancellation", "body": "A customer must confirm the exact service, date, time, timezone, and service zone before a booking is created. A change or cancellation needs a booking reference plus a local identity verification step. A proposed time is not a reservation; the calendar is checked again at confirmation."},
+    {"id": "emergency-policy", "source": "kb:emergency-policy", "title": "Emergencies and unsupported work", "body": "The browser receptionist cannot promise emergency dispatch or book unsafe work. Requests involving gas leaks, fire, immediate danger, or unsupported services go to a human handoff queue. For immediate danger, customers should contact local emergency services."}
+  ]
+}

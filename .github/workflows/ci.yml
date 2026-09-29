@@ -1,0 +1,67 @@
+name: VoiceDesk checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.11-alpine3.24
+        env:
+          POSTGRES_DB: voicedesk_test
+          POSTGRES_USER: voicedesk
+          POSTGRES_PASSWORD: ci-only-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U voicedesk -d voicedesk_test"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    defaults:
+      run:
+        working-directory: apps/api
+    env:
+      APP_MODE: demo
+      DATABASE_URL: postgresql+psycopg://voicedesk:ci-only-password@localhost:5432/voicedesk_test
+      APP_SECRET_KEY: ci-only-test-secret-do-not-deploy
+      DEMO_DATA_SIZE: quick
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: "0.12.19"
+          python-version: "3.12"
+      - run: uv sync --frozen --group dev
+      - run: uv run ruff check .
+      - run: >-
+          uv run mypy --ignore-missing-imports --follow-imports=silent
+          src/voicedesk/config.py src/voicedesk/domain.py src/voicedesk/schemas.py
+          src/voicedesk/models.py src/voicedesk/calendar.py src/voicedesk/auth.py
+          src/voicedesk/seed.py src/voicedesk/audio.py src/voicedesk/knowledge.py
+          src/voicedesk/prompts.py
+      - run: uv run alembic upgrade head
+      - run: uv run pytest -q
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/setup@v3
+        with:
+          version: "11.19.0"
+          runtime: "node@24"
+          working-directory: apps/web
+          install: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm build
+

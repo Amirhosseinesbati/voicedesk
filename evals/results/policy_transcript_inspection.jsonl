@@ -1,0 +1,1 @@
+{"appointment_mutations": [], "channel": "text", "errors": [], "isolation": "fresh SQLite DEMO database per case", "outcome": "incomplete", "reply_texts": ["Please say the exact date (YYYY-MM-DD) and timezone so I can check the correct day."], "scenario_id": "dev-policy_price-01", "session_status": "active", "start_at": null, "synthetic": true}

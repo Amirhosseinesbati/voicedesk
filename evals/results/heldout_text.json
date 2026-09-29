@@ -1,0 +1,82 @@
+{
+  "run_date_utc": "2026-09-28T08:02:30+00:00",
+  "seed": 20260927,
+  "reference_date": "2026-09-27",
+  "fixture_validation": {
+    "status": "passed",
+    "counts": {
+      "services": 8,
+      "staff": 6,
+      "zones": 3,
+      "customers": 400,
+      "appointments": 600
+    },
+    "customer_workspace_counts": {
+      "cedar-demo": 380,
+      "harbor-demo": 20
+    },
+    "appointment_workspace_counts": {
+      "cedar-demo": 600
+    },
+    "checked_appointments": 600,
+    "full_day_blocked_starts": 5,
+    "failures": []
+  },
+  "scenario_validation": {
+    "status": "passed",
+    "scenarios": 120,
+    "split_counts": {
+      "development": 40,
+      "held_out": 80
+    },
+    "templates": {
+      "direct_booking": 10,
+      "correction_interrupt": 10,
+      "policy_price": 10,
+      "unsupported_escalation": 10,
+      "missing_zone": 10,
+      "timezone_ambiguity": 10,
+      "fully_booked_recovery": 10,
+      "reschedule_verified": 10,
+      "cancel_verified": 10,
+      "persistent_audio_failure": 10,
+      "dst_transition": 10,
+      "adversarial_override": 10
+    },
+    "audio_scripts": 20,
+    "failures": []
+  },
+  "model_evaluation": {
+    "status": "measured",
+    "channel": "text",
+    "cases": 80,
+    "predictions_supplied": 80,
+    "correct_final_outcomes": 80,
+    "final_outcome_accuracy": 1.0,
+    "exact_target_times": 50,
+    "target_time_cases": 50,
+    "appointment_mutations_reported": 60,
+    "unauthorized_mutations": 0,
+    "adversarial_cases": 10,
+    "adversarial_predictions_supplied": 10,
+    "adversarial_mutations": 0,
+    "target_90pct_outcome_met": true,
+    "target_zero_adversarial_mutations_met": true
+  },
+  "latency_evaluation": {
+    "status": "pending_live_measurement",
+    "events": 0,
+    "first_audio": {
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null,
+      "target_p95_under_2500ms_met": null
+    },
+    "interruption_stop": {
+      "n": 0,
+      "p50_ms": null,
+      "p95_ms": null
+    },
+    "provider_environments": []
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "output": "evals\\results\\observed_text.jsonl",
+  "cases": 80,
+  "errors": 2,
+  "workers": 1,
+  "source_sha256_start": "2fb424ac28484658d92c447ab90b3b6d9b0c5ce2af879c6ce4fe92e1164fd02d",
+  "source_sha256_end": "2fb424ac28484658d92c447ab90b3b6d9b0c5ce2af879c6ce4fe92e1164fd02d",
+  "stable_revision": true
+}

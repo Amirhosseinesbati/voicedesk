@@ -1,0 +1,9 @@
+{
+  "output": "evals\\results\\development_text.jsonl",
+  "cases": 40,
+  "errors": 0,
+  "workers": 1,
+  "source_sha256_start": "876f4d3e22f5168fc588da5e009a6c91f48844c2e7cef5f47429cd10af5bf72c",
+  "source_sha256_end": "876f4d3e22f5168fc588da5e009a6c91f48844c2e7cef5f47429cd10af5bf72c",
+  "stable_revision": true
+}

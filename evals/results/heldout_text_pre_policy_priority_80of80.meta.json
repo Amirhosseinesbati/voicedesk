@@ -1,0 +1,15 @@
+{
+  "output": "evals\\results\\observed_text.jsonl",
+  "cases": 80,
+  "errors": 0,
+  "workers": 1,
+  "source_sha256_start": "2fb424ac28484658d92c447ab90b3b6d9b0c5ce2af879c6ce4fe92e1164fd02d",
+  "source_sha256_end": "2fb424ac28484658d92c447ab90b3b6d9b0c5ce2af879c6ce4fe92e1164fd02d",
+  "stable_revision": true,
+  "interrupted_after_recorded_cases": 18,
+  "continuity_check": "Before the first resume, all API Python, seed, knowledge-base, held-out script, and replay-runner input modification times were at or before the initial output creation time (2026-09-28T02:12:35Z); the two subsequent replay invocations had identical start/end source hashes.",
+  "initial_worker_errors_preserved": 2,
+  "initial_worker_error_ids": ["hel-timezone_ambiguity-07", "hel-timezone_ambiguity-08"],
+  "diagnostic_observations_file": "evals/results/heldout_text_infrastructure_errors_2of80.jsonl",
+  "replayed_error_cases": 2
+}

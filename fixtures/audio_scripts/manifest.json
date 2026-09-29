@@ -1,0 +1,11 @@
+{
+  "synthetic": true,
+  "status": "script_only_audio_pending",
+  "source": "scripts/generate_scenarios.py",
+  "seed": 20260927,
+  "reference_date": "2026-09-27",
+  "script_count": 20,
+  "external_tts_budget_usd": 0,
+  "consent": "No real caller data",
+  "render_instructions": "Use scripts/render_audio_fixtures.py with a locally installed pyttsx3 engine; unrendered scripts are not evidence of audio quality or latency."
+}

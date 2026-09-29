@@ -1,0 +1,1324 @@
+{
+  "metadata": {
+    "dataset_name": "Synthetic demo dataset",
+    "company": "Cedar Home Services",
+    "seed": 20260927,
+    "reference_date": "2026-09-27",
+    "timezone": "America/New_York",
+    "size": "quick",
+    "generated_at": "deterministic; see seed and reference_date",
+    "counts": {
+      "services": 8,
+      "staff": 6,
+      "zones": 3,
+      "customers": 24,
+      "appointments": 36
+    },
+    "appointment_status_counts": {
+      "confirmed": 34,
+      "cancelled": 2
+    },
+    "planted_conditions": {
+      "roof_inspection_full_day": "2026-10-14"
+    }
+  },
+  "workspaces": [
+    {
+      "id": "cedar-demo",
+      "name": "Cedar Home Services",
+      "synthetic": true
+    },
+    {
+      "id": "harbor-demo",
+      "name": "Harbor Home Care (isolation fixture)",
+      "synthetic": true
+    }
+  ],
+  "services": [
+    {
+      "id": "boiler-service",
+      "name": "Boiler service",
+      "description": "Annual inspection and maintenance of a residential boiler.",
+      "duration_minutes": 90,
+      "price_from_cents": 18900,
+      "eligible_zone_ids": [
+        "central",
+        "north",
+        "south"
+      ],
+      "policy_source": "kb:boiler-service",
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "heating-repair",
+      "name": "Heating repair",
+      "description": "Diagnosis and repair of a residential heating system.",
+      "duration_minutes": 120,
+      "price_from_cents": 22900,
+      "eligible_zone_ids": [
+        "central",
+        "north",
+        "south"
+      ],
+      "policy_source": "kb:heating-repair",
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "plumbing-repair",
+      "name": "Plumbing repair",
+      "description": "Repair of accessible household pipes, taps, and fixtures.",
+      "duration_minutes": 90,
+      "price_from_cents": 15900,
+      "eligible_zone_ids": [
+        "central",
+        "north",
+        "south"
+      ],
+      "policy_source": "kb:plumbing-repair",
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "drain-clearing",
+      "name": "Drain clearing",
+      "description": "Clear a routine household sink or tub blockage.",
+      "duration_minutes": 60,
+      "price_from_cents": 13900,
+      "eligible_zone_ids": [
+        "central",
+        "north",
+        "south"
+      ],
+      "policy_source": "kb:drain-clearing",
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "electrical-diagnostic",
+      "name": "Electrical diagnostic",
+      "description": "Investigate a residential electrical fault without major rewiring.",
+      "duration_minutes": 90,
+      "price_from_cents": 17900,
+      "eligible_zone_ids": [
+        "central",
+        "north",
+        "south"
+      ],
+      "policy_source": "kb:electrical-diagnostic",
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "appliance-repair",
+      "name": "Appliance repair",
+      "description": "Diagnosis of a residential washer, dryer, or dishwasher.",
+      "duration_minutes": 120,
+      "price_from_cents": 16900,
+      "eligible_zone_ids": [
+        "central",
+        "north"
+      ],
+      "policy_source": "kb:appliance-repair",
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "roof-inspection",
+      "name": "Roof inspection",
+      "description": "Visual inspection of an accessible residential roof.",
+      "duration_minutes": 120,
+      "price_from_cents": 24900,
+      "eligible_zone_ids": [
+        "central",
+        "south"
+      ],
+      "policy_source": "kb:roof-inspection",
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "general-maintenance",
+      "name": "General maintenance",
+      "description": "Small household repairs suitable for one visit.",
+      "duration_minutes": 60,
+      "price_from_cents": 11900,
+      "eligible_zone_ids": [
+        "central",
+        "north",
+        "south"
+      ],
+      "policy_source": "kb:general-maintenance",
+      "workspace_id": "cedar-demo"
+    }
+  ],
+  "zones": [
+    {
+      "id": "central",
+      "name": "Central Maple County",
+      "postal_prefixes": [
+        "100",
+        "101"
+      ],
+      "travel_fee_cents": 0,
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "north",
+      "name": "North Maple County",
+      "postal_prefixes": [
+        "102",
+        "103"
+      ],
+      "travel_fee_cents": 1500,
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "south",
+      "name": "South Maple County",
+      "postal_prefixes": [
+        "104",
+        "105"
+      ],
+      "travel_fee_cents": 2000,
+      "workspace_id": "cedar-demo"
+    }
+  ],
+  "staff": [
+    {
+      "id": "amina-patel",
+      "name": "Amina Patel",
+      "service_ids": [
+        "boiler-service",
+        "heating-repair",
+        "general-maintenance"
+      ],
+      "zone_ids": [
+        "central",
+        "north"
+      ],
+      "weekly_hours": {
+        "monday": [
+          {
+            "start": "08:00",
+            "end": "16:00"
+          }
+        ],
+        "tuesday": [
+          {
+            "start": "08:00",
+            "end": "16:00"
+          }
+        ],
+        "wednesday": [
+          {
+            "start": "08:00",
+            "end": "16:00"
+          }
+        ],
+        "thursday": [
+          {
+            "start": "08:00",
+            "end": "16:00"
+          }
+        ],
+        "friday": [
+          {
+            "start": "08:00",
+            "end": "16:00"
+          }
+        ],
+        "saturday": [],
+        "sunday": []
+      },
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "diego-morales",
+      "name": "Diego Morales",
+      "service_ids": [
+        "plumbing-repair",
+        "drain-clearing",
+        "general-maintenance"
+      ],
+      "zone_ids": [
+        "central",
+        "south"
+      ],
+      "weekly_hours": {
+        "monday": [],
+        "tuesday": [
+          {
+            "start": "09:00",
+            "end": "18:00"
+          }
+        ],
+        "wednesday": [
+          {
+            "start": "09:00",
+            "end": "18:00"
+          }
+        ],
+        "thursday": [
+          {
+            "start": "09:00",
+            "end": "18:00"
+          }
+        ],
+        "friday": [
+          {
+            "start": "09:00",
+            "end": "18:00"
+          }
+        ],
+        "saturday": [
+          {
+            "start": "09:00",
+            "end": "18:00"
+          }
+        ],
+        "sunday": []
+      },
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "nora-chen",
+      "name": "Nora Chen",
+      "service_ids": [
+        "electrical-diagnostic",
+        "general-maintenance",
+        "appliance-repair"
+      ],
+      "zone_ids": [
+        "central",
+        "north",
+        "south"
+      ],
+      "weekly_hours": {
+        "monday": [
+          {
+            "start": "08:30",
+            "end": "17:00"
+          }
+        ],
+        "tuesday": [
+          {
+            "start": "08:30",
+            "end": "17:00"
+          }
+        ],
+        "wednesday": [
+          {
+            "start": "08:30",
+            "end": "17:00"
+          }
+        ],
+        "thursday": [
+          {
+            "start": "08:30",
+            "end": "17:00"
+          }
+        ],
+        "friday": [
+          {
+            "start": "08:30",
+            "end": "17:00"
+          }
+        ],
+        "saturday": [],
+        "sunday": []
+      },
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "elliot-brooks",
+      "name": "Elliot Brooks",
+      "service_ids": [
+        "appliance-repair",
+        "boiler-service",
+        "heating-repair"
+      ],
+      "zone_ids": [
+        "central",
+        "north"
+      ],
+      "weekly_hours": {
+        "monday": [
+          {
+            "start": "08:00",
+            "end": "15:30"
+          }
+        ],
+        "tuesday": [
+          {
+            "start": "08:00",
+            "end": "15:30"
+          }
+        ],
+        "wednesday": [
+          {
+            "start": "08:00",
+            "end": "15:30"
+          }
+        ],
+        "thursday": [
+          {
+            "start": "08:00",
+            "end": "15:30"
+          }
+        ],
+        "friday": [],
+        "saturday": [],
+        "sunday": []
+      },
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "jules-ramirez",
+      "name": "Jules Ramirez",
+      "service_ids": [
+        "roof-inspection",
+        "general-maintenance",
+        "plumbing-repair"
+      ],
+      "zone_ids": [
+        "central",
+        "south"
+      ],
+      "weekly_hours": {
+        "monday": [],
+        "tuesday": [],
+        "wednesday": [
+          {
+            "start": "10:00",
+            "end": "18:00"
+          }
+        ],
+        "thursday": [
+          {
+            "start": "10:00",
+            "end": "18:00"
+          }
+        ],
+        "friday": [
+          {
+            "start": "10:00",
+            "end": "18:00"
+          }
+        ],
+        "saturday": [
+          {
+            "start": "10:00",
+            "end": "18:00"
+          }
+        ],
+        "sunday": [
+          {
+            "start": "10:00",
+            "end": "18:00"
+          }
+        ]
+      },
+      "workspace_id": "cedar-demo"
+    },
+    {
+      "id": "riley-owens",
+      "name": "Riley Owens",
+      "service_ids": [
+        "boiler-service",
+        "heating-repair",
+        "drain-clearing",
+        "electrical-diagnostic",
+        "roof-inspection"
+      ],
+      "zone_ids": [
+        "central",
+        "north",
+        "south"
+      ],
+      "weekly_hours": {
+        "monday": [
+          {
+            "start": "11:00",
+            "end": "19:00"
+          }
+        ],
+        "tuesday": [
+          {
+            "start": "11:00",
+            "end": "19:00"
+          }
+        ],
+        "wednesday": [
+          {
+            "start": "11:00",
+            "end": "19:00"
+          }
+        ],
+        "thursday": [
+          {
+            "start": "11:00",
+            "end": "19:00"
+          }
+        ],
+        "friday": [
+          {
+            "start": "11:00",
+            "end": "19:00"
+          }
+        ],
+        "saturday": [],
+        "sunday": []
+      },
+      "workspace_id": "cedar-demo"
+    }
+  ],
+  "business_hours": {
+    "monday": [
+      {
+        "start": "08:00",
+        "end": "19:00"
+      }
+    ],
+    "tuesday": [
+      {
+        "start": "08:00",
+        "end": "19:00"
+      }
+    ],
+    "wednesday": [
+      {
+        "start": "08:00",
+        "end": "19:00"
+      }
+    ],
+    "thursday": [
+      {
+        "start": "08:00",
+        "end": "19:00"
+      }
+    ],
+    "friday": [
+      {
+        "start": "08:00",
+        "end": "19:00"
+      }
+    ],
+    "saturday": [
+      {
+        "start": "08:00",
+        "end": "19:00"
+      }
+    ],
+    "sunday": [
+      {
+        "start": "10:00",
+        "end": "16:00"
+      }
+    ]
+  },
+  "blackouts": [
+    {
+      "id": "holiday-2026-01-01",
+      "workspace_id": "cedar-demo",
+      "staff_id": null,
+      "start_at": "2026-01-01T05:00:00Z",
+      "end_at": "2026-01-02T05:00:00Z",
+      "reason": "Company holiday"
+    },
+    {
+      "id": "holiday-2026-07-04",
+      "workspace_id": "cedar-demo",
+      "staff_id": null,
+      "start_at": "2026-07-04T04:00:00Z",
+      "end_at": "2026-07-05T04:00:00Z",
+      "reason": "Company holiday"
+    },
+    {
+      "id": "holiday-2026-11-26",
+      "workspace_id": "cedar-demo",
+      "staff_id": null,
+      "start_at": "2026-11-26T05:00:00Z",
+      "end_at": "2026-11-27T05:00:00Z",
+      "reason": "Company holiday"
+    },
+    {
+      "id": "holiday-2026-12-25",
+      "workspace_id": "cedar-demo",
+      "staff_id": null,
+      "start_at": "2026-12-25T05:00:00Z",
+      "end_at": "2026-12-26T05:00:00Z",
+      "reason": "Company holiday"
+    },
+    {
+      "id": "holiday-2027-01-01",
+      "workspace_id": "cedar-demo",
+      "staff_id": null,
+      "start_at": "2027-01-01T05:00:00Z",
+      "end_at": "2027-01-02T05:00:00Z",
+      "reason": "Company holiday"
+    },
+    {
+      "id": "holiday-2027-07-04",
+      "workspace_id": "cedar-demo",
+      "staff_id": null,
+      "start_at": "2027-07-04T04:00:00Z",
+      "end_at": "2027-07-05T04:00:00Z",
+      "reason": "Company holiday"
+    },
+    {
+      "id": "holiday-2027-11-25",
+      "workspace_id": "cedar-demo",
+      "staff_id": null,
+      "start_at": "2027-11-25T05:00:00Z",
+      "end_at": "2027-11-26T05:00:00Z",
+      "reason": "Company holiday"
+    },
+    {
+      "id": "holiday-2027-12-25",
+      "workspace_id": "cedar-demo",
+      "staff_id": null,
+      "start_at": "2027-12-25T05:00:00Z",
+      "end_at": "2027-12-26T05:00:00Z",
+      "reason": "Company holiday"
+    },
+    {
+      "id": "leave-amina-patel-2026-10-15",
+      "workspace_id": "cedar-demo",
+      "staff_id": "amina-patel",
+      "start_at": "2026-10-15T04:00:00Z",
+      "end_at": "2026-10-17T04:00:00Z",
+      "reason": "Staff leave"
+    },
+    {
+      "id": "leave-diego-morales-2026-10-28",
+      "workspace_id": "cedar-demo",
+      "staff_id": "diego-morales",
+      "start_at": "2026-10-28T04:00:00Z",
+      "end_at": "2026-10-31T04:00:00Z",
+      "reason": "Staff leave"
+    },
+    {
+      "id": "leave-nora-chen-2026-09-05",
+      "workspace_id": "cedar-demo",
+      "staff_id": "nora-chen",
+      "start_at": "2026-09-05T04:00:00Z",
+      "end_at": "2026-09-06T04:00:00Z",
+      "reason": "Staff leave"
+    },
+    {
+      "id": "leave-jules-ramirez-2026-11-14",
+      "workspace_id": "cedar-demo",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-11-14T05:00:00Z",
+      "end_at": "2026-11-16T05:00:00Z",
+      "reason": "Staff leave"
+    }
+  ],
+  "customers": [
+    {
+      "id": "customer-0001",
+      "workspace_id": "cedar-demo",
+      "name": "Maya Wright",
+      "email": "customer0001.cedar-demo@example.com",
+      "phone": "+1-555-000-0001",
+      "zone_id": "central",
+      "postal_code": "10062",
+      "address_line": "20 Oak Lane"
+    },
+    {
+      "id": "customer-0002",
+      "workspace_id": "cedar-demo",
+      "name": "Oliver Bennett",
+      "email": "customer0002.cedar-demo@example.com",
+      "phone": "+1-555-000-0002",
+      "zone_id": "north",
+      "postal_code": "10209",
+      "address_line": "37 Maple Lane"
+    },
+    {
+      "id": "customer-0003",
+      "workspace_id": "cedar-demo",
+      "name": "Sofia Turner",
+      "email": "customer0003.cedar-demo@example.com",
+      "phone": "+1-555-000-0003",
+      "zone_id": "south",
+      "postal_code": "10551",
+      "address_line": "54 Oak Lane"
+    },
+    {
+      "id": "customer-0004",
+      "workspace_id": "cedar-demo",
+      "name": "Liam Reed",
+      "email": "customer0004.cedar-demo@example.com",
+      "phone": "+1-555-000-0004",
+      "zone_id": "central",
+      "postal_code": "10039",
+      "address_line": "71 Maple Lane"
+    },
+    {
+      "id": "customer-0005",
+      "workspace_id": "cedar-demo",
+      "name": "Ava Cole",
+      "email": "customer0005.cedar-demo@example.com",
+      "phone": "+1-555-000-0005",
+      "zone_id": "north",
+      "postal_code": "10285",
+      "address_line": "88 Cedar Lane"
+    },
+    {
+      "id": "customer-0006",
+      "workspace_id": "cedar-demo",
+      "name": "Noah Price",
+      "email": "customer0006.cedar-demo@example.com",
+      "phone": "+1-555-000-0006",
+      "zone_id": "south",
+      "postal_code": "10532",
+      "address_line": "105 Maple Lane"
+    },
+    {
+      "id": "customer-0007",
+      "workspace_id": "cedar-demo",
+      "name": "Isla Foster",
+      "email": "customer0007.cedar-demo@example.com",
+      "phone": "+1-555-000-0007",
+      "zone_id": "central",
+      "postal_code": "10044",
+      "address_line": "122 Elm Lane"
+    },
+    {
+      "id": "customer-0008",
+      "workspace_id": "cedar-demo",
+      "name": "Ethan Diaz",
+      "email": "customer0008.cedar-demo@example.com",
+      "phone": "+1-555-000-0008",
+      "zone_id": "north",
+      "postal_code": "10281",
+      "address_line": "139 Maple Lane"
+    },
+    {
+      "id": "customer-0009",
+      "workspace_id": "cedar-demo",
+      "name": "Zoe Bell",
+      "email": "customer0009.cedar-demo@example.com",
+      "phone": "+1-555-000-0009",
+      "zone_id": "south",
+      "postal_code": "10466",
+      "address_line": "156 Maple Lane"
+    },
+    {
+      "id": "customer-0010",
+      "workspace_id": "cedar-demo",
+      "name": "Theo Kim",
+      "email": "customer0010.cedar-demo@example.com",
+      "phone": "+1-555-000-0010",
+      "zone_id": "central",
+      "postal_code": "10126",
+      "address_line": "173 Elm Lane"
+    },
+    {
+      "id": "customer-0011",
+      "workspace_id": "cedar-demo",
+      "name": "Leila Morgan",
+      "email": "customer0011.cedar-demo@example.com",
+      "phone": "+1-555-000-0011",
+      "zone_id": "north",
+      "postal_code": "10314",
+      "address_line": "190 Cedar Lane"
+    },
+    {
+      "id": "customer-0012",
+      "workspace_id": "cedar-demo",
+      "name": "Miles Bailey",
+      "email": "customer0012.cedar-demo@example.com",
+      "phone": "+1-555-000-0012",
+      "zone_id": "south",
+      "postal_code": "10407",
+      "address_line": "207 Elm Lane"
+    },
+    {
+      "id": "customer-0013",
+      "workspace_id": "cedar-demo",
+      "name": "Priya Hughes",
+      "email": "customer0013.cedar-demo@example.com",
+      "phone": "+1-555-000-0013",
+      "zone_id": "central",
+      "postal_code": "10089",
+      "address_line": "224 Cedar Lane"
+    },
+    {
+      "id": "customer-0014",
+      "workspace_id": "cedar-demo",
+      "name": "Jonah Nguyen",
+      "email": "customer0014.cedar-demo@example.com",
+      "phone": "+1-555-000-0014",
+      "zone_id": "north",
+      "postal_code": "10216",
+      "address_line": "241 Oak Lane"
+    },
+    {
+      "id": "customer-0015",
+      "workspace_id": "cedar-demo",
+      "name": "Clara Stone",
+      "email": "customer0015.cedar-demo@example.com",
+      "phone": "+1-555-000-0015",
+      "zone_id": "south",
+      "postal_code": "10503",
+      "address_line": "258 Birch Lane"
+    },
+    {
+      "id": "customer-0016",
+      "workspace_id": "cedar-demo",
+      "name": "Felix Singh",
+      "email": "customer0016.cedar-demo@example.com",
+      "phone": "+1-555-000-0016",
+      "zone_id": "central",
+      "postal_code": "10117",
+      "address_line": "275 Elm Lane"
+    },
+    {
+      "id": "customer-0017",
+      "workspace_id": "cedar-demo",
+      "name": "Nina Lewis",
+      "email": "customer0017.cedar-demo@example.com",
+      "phone": "+1-555-000-0017",
+      "zone_id": "north",
+      "postal_code": "10216",
+      "address_line": "292 Maple Lane"
+    },
+    {
+      "id": "customer-0018",
+      "workspace_id": "cedar-demo",
+      "name": "Owen Rivera",
+      "email": "customer0018.cedar-demo@example.com",
+      "phone": "+1-555-000-0018",
+      "zone_id": "south",
+      "postal_code": "10404",
+      "address_line": "309 Maple Lane"
+    },
+    {
+      "id": "customer-0019",
+      "workspace_id": "cedar-demo",
+      "name": "Elena Park",
+      "email": "customer0019.cedar-demo@example.com",
+      "phone": "+1-555-000-0019",
+      "zone_id": "central",
+      "postal_code": "10078",
+      "address_line": "326 Elm Lane"
+    },
+    {
+      "id": "customer-0020",
+      "workspace_id": "cedar-demo",
+      "name": "Samir Shah",
+      "email": "customer0020.cedar-demo@example.com",
+      "phone": "+1-555-000-0020",
+      "zone_id": "north",
+      "postal_code": "10206",
+      "address_line": "343 Elm Lane"
+    },
+    {
+      "id": "customer-0021",
+      "workspace_id": "cedar-demo",
+      "name": "Maya Reed",
+      "email": "customer0021.cedar-demo@example.com",
+      "phone": "+1-555-000-0021",
+      "zone_id": "south",
+      "postal_code": "10510",
+      "address_line": "360 Cedar Lane"
+    },
+    {
+      "id": "customer-0022",
+      "workspace_id": "cedar-demo",
+      "name": "Oliver Cole",
+      "email": "customer0022.cedar-demo@example.com",
+      "phone": "+1-555-000-0022",
+      "zone_id": "central",
+      "postal_code": "10083",
+      "address_line": "377 Oak Lane"
+    },
+    {
+      "id": "customer-0023",
+      "workspace_id": "cedar-demo",
+      "name": "Sofia Price",
+      "email": "customer0023.cedar-demo@example.com",
+      "phone": "+1-555-000-0023",
+      "zone_id": "north",
+      "postal_code": "10224",
+      "address_line": "394 Cedar Lane"
+    },
+    {
+      "id": "customer-0024",
+      "workspace_id": "harbor-demo",
+      "name": "Liam Foster",
+      "email": "customer0024.harbor-demo@example.com",
+      "phone": "+1-555-000-0024",
+      "zone_id": "south",
+      "postal_code": "10402",
+      "address_line": "411 Elm Lane"
+    }
+  ],
+  "appointments": [
+    {
+      "id": "appointment-0001",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0001",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-10-14T14:00:00Z",
+      "end_at": "2026-10-14T16:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-07T14:00:00Z",
+      "booking_reference": "CED-000001"
+    },
+    {
+      "id": "appointment-0002",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0004",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-10-14T16:00:00Z",
+      "end_at": "2026-10-14T18:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-07T16:00:00Z",
+      "booking_reference": "CED-000002"
+    },
+    {
+      "id": "appointment-0003",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0007",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-10-14T18:00:00Z",
+      "end_at": "2026-10-14T20:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-07T18:00:00Z",
+      "booking_reference": "CED-000003"
+    },
+    {
+      "id": "appointment-0004",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0010",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-10-14T20:00:00Z",
+      "end_at": "2026-10-14T22:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-07T20:00:00Z",
+      "booking_reference": "CED-000004"
+    },
+    {
+      "id": "appointment-0005",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0013",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "riley-owens",
+      "start_at": "2026-10-14T15:00:00Z",
+      "end_at": "2026-10-14T17:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-07T15:00:00Z",
+      "booking_reference": "CED-000005"
+    },
+    {
+      "id": "appointment-0006",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0016",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "riley-owens",
+      "start_at": "2026-10-14T17:00:00Z",
+      "end_at": "2026-10-14T19:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-07T17:00:00Z",
+      "booking_reference": "CED-000006"
+    },
+    {
+      "id": "appointment-0007",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0019",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "riley-owens",
+      "start_at": "2026-10-14T19:00:00Z",
+      "end_at": "2026-10-14T21:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-07T19:00:00Z",
+      "booking_reference": "CED-000007"
+    },
+    {
+      "id": "appointment-0008",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0022",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "riley-owens",
+      "start_at": "2026-10-14T21:00:00Z",
+      "end_at": "2026-10-14T23:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-07T21:00:00Z",
+      "booking_reference": "CED-000008"
+    },
+    {
+      "id": "appointment-0009",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0009",
+      "service_id": "drain-clearing",
+      "zone_id": "south",
+      "staff_id": "diego-morales",
+      "start_at": "2026-08-06T15:30:00Z",
+      "end_at": "2026-08-06T16:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-07-13T15:30:00Z",
+      "booking_reference": "CED-000009"
+    },
+    {
+      "id": "appointment-0010",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0004",
+      "service_id": "heating-repair",
+      "zone_id": "central",
+      "staff_id": "riley-owens",
+      "start_at": "2026-05-01T18:30:00Z",
+      "end_at": "2026-05-01T20:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-04-05T18:30:00Z",
+      "booking_reference": "CED-000010"
+    },
+    {
+      "id": "appointment-0011",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0004",
+      "service_id": "heating-repair",
+      "zone_id": "central",
+      "staff_id": "amina-patel",
+      "start_at": "2026-06-02T17:30:00Z",
+      "end_at": "2026-06-02T19:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-04-30T17:30:00Z",
+      "booking_reference": "CED-000011"
+    },
+    {
+      "id": "appointment-0012",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0011",
+      "service_id": "appliance-repair",
+      "zone_id": "north",
+      "staff_id": "nora-chen",
+      "start_at": "2026-06-09T16:30:00Z",
+      "end_at": "2026-06-09T18:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-05-27T16:30:00Z",
+      "booking_reference": "CED-000012"
+    },
+    {
+      "id": "appointment-0013",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0023",
+      "service_id": "appliance-repair",
+      "zone_id": "north",
+      "staff_id": "elliot-brooks",
+      "start_at": "2026-09-01T12:30:00Z",
+      "end_at": "2026-09-01T14:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-08-07T12:30:00Z",
+      "booking_reference": "CED-000013"
+    },
+    {
+      "id": "appointment-0014",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0002",
+      "service_id": "heating-repair",
+      "zone_id": "north",
+      "staff_id": "amina-patel",
+      "start_at": "2026-05-05T16:00:00Z",
+      "end_at": "2026-05-05T18:00:00Z",
+      "status": "cancelled",
+      "created_at": "2026-03-29T16:00:00Z",
+      "booking_reference": "CED-000014"
+    },
+    {
+      "id": "appointment-0015",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0012",
+      "service_id": "electrical-diagnostic",
+      "zone_id": "south",
+      "staff_id": "riley-owens",
+      "start_at": "2026-06-15T17:00:00Z",
+      "end_at": "2026-06-15T18:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-05-19T17:00:00Z",
+      "booking_reference": "CED-000015"
+    },
+    {
+      "id": "appointment-0016",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0002",
+      "service_id": "boiler-service",
+      "zone_id": "north",
+      "staff_id": "elliot-brooks",
+      "start_at": "2026-08-03T14:00:00Z",
+      "end_at": "2026-08-03T15:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-07-24T14:00:00Z",
+      "booking_reference": "CED-000016"
+    },
+    {
+      "id": "appointment-0017",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0022",
+      "service_id": "appliance-repair",
+      "zone_id": "central",
+      "staff_id": "nora-chen",
+      "start_at": "2026-05-11T17:30:00Z",
+      "end_at": "2026-05-11T19:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-04-07T17:30:00Z",
+      "booking_reference": "CED-000017"
+    },
+    {
+      "id": "appointment-0018",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0016",
+      "service_id": "plumbing-repair",
+      "zone_id": "central",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-07-02T15:30:00Z",
+      "end_at": "2026-07-02T17:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-06-23T15:30:00Z",
+      "booking_reference": "CED-000018"
+    },
+    {
+      "id": "appointment-0019",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0010",
+      "service_id": "boiler-service",
+      "zone_id": "central",
+      "staff_id": "riley-owens",
+      "start_at": "2026-08-24T16:30:00Z",
+      "end_at": "2026-08-24T18:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-07-14T16:30:00Z",
+      "booking_reference": "CED-000019"
+    },
+    {
+      "id": "appointment-0020",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0006",
+      "service_id": "roof-inspection",
+      "zone_id": "south",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-06-24T16:00:00Z",
+      "end_at": "2026-06-24T18:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-05-23T16:00:00Z",
+      "booking_reference": "CED-000020"
+    },
+    {
+      "id": "appointment-0021",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0010",
+      "service_id": "plumbing-repair",
+      "zone_id": "central",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-04-08T17:00:00Z",
+      "end_at": "2026-04-08T18:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-04-03T17:00:00Z",
+      "booking_reference": "CED-000021"
+    },
+    {
+      "id": "appointment-0022",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0011",
+      "service_id": "heating-repair",
+      "zone_id": "north",
+      "staff_id": "amina-patel",
+      "start_at": "2026-09-01T13:30:00Z",
+      "end_at": "2026-09-01T15:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-08-06T13:30:00Z",
+      "booking_reference": "CED-000022"
+    },
+    {
+      "id": "appointment-0023",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0012",
+      "service_id": "general-maintenance",
+      "zone_id": "south",
+      "staff_id": "nora-chen",
+      "start_at": "2026-06-15T15:30:00Z",
+      "end_at": "2026-06-15T16:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-05-07T15:30:00Z",
+      "booking_reference": "CED-000023"
+    },
+    {
+      "id": "appointment-0024",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0001",
+      "service_id": "heating-repair",
+      "zone_id": "central",
+      "staff_id": "amina-patel",
+      "start_at": "2026-04-02T13:00:00Z",
+      "end_at": "2026-04-02T15:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-03-22T13:00:00Z",
+      "booking_reference": "CED-000024"
+    },
+    {
+      "id": "appointment-0025",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0016",
+      "service_id": "appliance-repair",
+      "zone_id": "central",
+      "staff_id": "nora-chen",
+      "start_at": "2026-09-01T16:30:00Z",
+      "end_at": "2026-09-01T18:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-08-02T16:30:00Z",
+      "booking_reference": "CED-000025"
+    },
+    {
+      "id": "appointment-0026",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0016",
+      "service_id": "roof-inspection",
+      "zone_id": "central",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-04-23T14:30:00Z",
+      "end_at": "2026-04-23T16:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-03-25T14:30:00Z",
+      "booking_reference": "CED-000026"
+    },
+    {
+      "id": "appointment-0027",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0003",
+      "service_id": "roof-inspection",
+      "zone_id": "south",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-06-04T15:30:00Z",
+      "end_at": "2026-06-04T17:30:00Z",
+      "status": "cancelled",
+      "created_at": "2026-05-05T15:30:00Z",
+      "booking_reference": "CED-000027"
+    },
+    {
+      "id": "appointment-0028",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0006",
+      "service_id": "plumbing-repair",
+      "zone_id": "south",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-04-03T18:30:00Z",
+      "end_at": "2026-04-03T20:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-03-27T18:30:00Z",
+      "booking_reference": "CED-000028"
+    },
+    {
+      "id": "appointment-0029",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0004",
+      "service_id": "drain-clearing",
+      "zone_id": "central",
+      "staff_id": "diego-morales",
+      "start_at": "2026-08-08T19:00:00Z",
+      "end_at": "2026-08-08T20:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-07-30T19:00:00Z",
+      "booking_reference": "CED-000029"
+    },
+    {
+      "id": "appointment-0030",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0014",
+      "service_id": "appliance-repair",
+      "zone_id": "north",
+      "staff_id": "nora-chen",
+      "start_at": "2026-04-10T14:30:00Z",
+      "end_at": "2026-04-10T16:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-03-04T14:30:00Z",
+      "booking_reference": "CED-000030"
+    },
+    {
+      "id": "appointment-0031",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0019",
+      "service_id": "heating-repair",
+      "zone_id": "central",
+      "staff_id": "amina-patel",
+      "start_at": "2026-07-15T12:00:00Z",
+      "end_at": "2026-07-15T14:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-06-08T12:00:00Z",
+      "booking_reference": "CED-000031"
+    },
+    {
+      "id": "appointment-0032",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0013",
+      "service_id": "appliance-repair",
+      "zone_id": "central",
+      "staff_id": "elliot-brooks",
+      "start_at": "2026-05-21T16:00:00Z",
+      "end_at": "2026-05-21T18:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-04-20T16:00:00Z",
+      "booking_reference": "CED-000032"
+    },
+    {
+      "id": "appointment-0033",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0011",
+      "service_id": "general-maintenance",
+      "zone_id": "north",
+      "staff_id": "amina-patel",
+      "start_at": "2026-08-18T19:00:00Z",
+      "end_at": "2026-08-18T20:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-08-12T19:00:00Z",
+      "booking_reference": "CED-000033"
+    },
+    {
+      "id": "appointment-0034",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0016",
+      "service_id": "drain-clearing",
+      "zone_id": "central",
+      "staff_id": "diego-morales",
+      "start_at": "2026-12-19T21:30:00Z",
+      "end_at": "2026-12-19T22:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-11-28T21:30:00Z",
+      "booking_reference": "CED-000034"
+    },
+    {
+      "id": "appointment-0035",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0003",
+      "service_id": "roof-inspection",
+      "zone_id": "south",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-10-31T18:30:00Z",
+      "end_at": "2026-10-31T20:30:00Z",
+      "status": "confirmed",
+      "created_at": "2026-10-01T18:30:00Z",
+      "booking_reference": "CED-000035"
+    },
+    {
+      "id": "appointment-0036",
+      "workspace_id": "cedar-demo",
+      "customer_id": "customer-0021",
+      "service_id": "plumbing-repair",
+      "zone_id": "south",
+      "staff_id": "jules-ramirez",
+      "start_at": "2026-11-01T16:30:00Z",
+      "end_at": "2026-11-01T18:00:00Z",
+      "status": "confirmed",
+      "created_at": "2026-09-18T16:30:00Z",
+      "booking_reference": "CED-000036"
+    }
+  ]
+}
