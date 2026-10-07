@@ -15,7 +15,16 @@ def articles() -> list[dict]:
 
 
 def scoped_articles(workspace_id: str) -> list[dict]:
-    return articles() if workspace_id in {"cedar-demo", "cedar-connected"} else []
+    if workspace_id not in {"cedar-demo", "cedar-connected"}:
+        return []
+    from voicedesk.db import SessionLocal
+    from voicedesk.models import Workspace
+
+    with SessionLocal() as db:
+        workspace = db.get(Workspace, workspace_id)
+        if workspace and (workspace.presentation or {}).get("policy_review_required"):
+            return []
+    return articles()
 
 
 def answer_policy(question: str, service_id: str | None, workspace_id: str) -> str:

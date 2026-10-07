@@ -1,0 +1,28 @@
+# VoiceDesk upgrade checkpoint — 2026-10-06
+
+This records the verified functional implementation pass from October 6. The visual hold was resolved by the approved A + Light/Dark/System direction on October 7; see [THEME_ROLLOUT.md](THEME_ROLLOUT.md) for the implemented design and latest evidence. Existing code and pre-existing dirty README, .gitignore, IMPLEMENTATION_STATUS.md and teaser_assets are preserved.
+
+Implemented so far:
+
+- Clear primary text entry, visible booking progress, text retained on failed send, same turn ID on retry after an uncertain response, resumed server transcript after reload, explicit catalogue/session errors.
+- Audio reconnect keeps the same session. Microphone denial/not-found/busy messages, connection timeout, cancellation, generation guards, media cleanup, mute reset, and text recovery are implemented. No real microphone permission was requested.
+- Server-backed admin client settings for branding, IANA timezone, all seven opening days, existing service names/descriptions/durations/prices/visibility. Read-only operator/viewer views, server RBAC + CSRF, scoped service IDs, revision conflict handling, pending proposal/hold invalidation, and duration validation at confirmation.
+- Database compare-and-swap protects revisions. Customized names/services/hours survive demo startup reseeding. New sessions and the operator calendar/management use the configured timezone. Local assistant greetings/clarifications use active client services; changed business/service definitions defer outdated Cedar policy answers pending source review.
+- Separate migrated SQLite preview on API **8315** and frontend **4315**, with all providers in demo/local mode. 24 synthetic customers and 36 fixture appointments. No external calls or publication.
+- Repaired 614 VoiceDesk-only installed dependency junctions and the Python editable package path from the missing `New folder (3)` path. No new dependencies installed.
+
+Final verification (2026-10-06, local installed dependencies):
+
+- Backend `pytest`: **16/16 passed**, 12.39 seconds after the final transcript correction. Includes existing concurrency/ownership/retention/connected-bootstrap/DST tests and new configuration RBAC, CSRF, ownership, stale revisions, CORS PUT preflight, legacy migration preservation, closed-hour capacity, proposal invalidation, session timezone, reseed persistence, local response/policy checks and legacy tied-timestamp transcript ordering.
+- Backend Ruff on `src tests migrations`: passed. Mypy on the existing ten-file explicit scope plus new `workspace.py`: **11 files passed**. Full API type-check debt recorded in the existing implementation status remains outside this scope.
+- Frontend ESLint and `tsc -b`: passed after final edits. Generated API types and the new workspace input/response contract checks match the running API.
+- Production `vite build`: passed. Final bundle: 349.36 kB JS (104.32 kB gzip), 46.75 kB CSS (11.29 kB gzip). Exit 0 confirmed after the final edits.
+- Playwright: **6/6 passed**, 17.0 seconds, one Chromium worker with a 60-second overall limit. Actual local confirmation-gated booking and invalid verification-code rejection; lost response after server commit with idempotent retry and customer-before-assistant ordering; temporary session refresh failure preserving history; new-session field reset; WebSocket reconnect in the same session and switch to text; simulated microphone denial without a permission request; operator/admin settings persistence; configured London timezone in studio and operator calendar; settings overflow checks at 1440, 768, 390 and 320px; studio/operator checks at 1440, 1024 and 390px.
+- The first browser run found settings overflow at 768px; it was fixed. Screenshot review found assistant replies preceding customer messages because legacy batch inserts shared a timestamp; deterministic ordering, explicit customer timestamps and a regression test correct it. An initial backend full run exposed test import order binding the legacy default database; the new fixture imports were made lazy, and complete reruns passed.
+- Whitespace check passes for this pass's source scope. A whole-repository whitespace check also reports pre-existing CRLF/trailing-whitespace changes in the user's dirty README/.gitignore; those files were preserved.
+
+Deliverables: [client customization guide](CLIENT_CUSTOMIZATION.md), `scripts/preview_local.ps1`, `scripts/capture_upgrade.mjs`, new regression tests, migration and server/client source changes. Screenshots in `docs/screenshots/upgrade-checkpoint` are provisional interface evidence, not the final visual direction.
+
+Provisional screenshots: [studio desktop](screenshots/upgrade-checkpoint/01-studio-desktop.png), [studio mobile](screenshots/upgrade-checkpoint/02-studio-mobile.png), [settings mobile](screenshots/upgrade-checkpoint/03-settings-mobile.png), [settings desktop](screenshots/upgrade-checkpoint/04-settings-desktop.png), [operator desktop](screenshots/upgrade-checkpoint/05-operator-desktop.png), [operator mobile](screenshots/upgrade-checkpoint/06-operator-mobile.png).
+
+Remaining: approved client policy-source management, entity provisioning for new staff/zones/services, provider authorization and actual live measurement, Docker/PostgreSQL verification. The approved visual redesign is implemented in the October 7 rollout. Automatic approval review rejected adding the private client catalogue to an external model prompt under the no-third-party-data constraint; that change was excluded. No provider calls, secret changes, installs, commits, pushes or publication occurred in this functional pass. Live AI accuracy and provider latency remain unmeasured.

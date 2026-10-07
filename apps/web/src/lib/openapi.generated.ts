@@ -1,4 +1,22 @@
 export interface paths {
+    "/api/workspace": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Workspace */
+        get: operations["read_workspace_api_workspace_get"];
+        /** Update Workspace */
+        put: operations["update_workspace_api_workspace_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/health": {
         parameters: {
             query?: never;
@@ -507,6 +525,23 @@ export interface components {
              */
             created_at: string;
         };
+        /** HoursInput */
+        HoursInput: {
+            /**
+             * Day
+             * @enum {string}
+             */
+            day: "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday";
+            /**
+             * Closed
+             * @default false
+             */
+            closed: boolean;
+            /** Start */
+            start: string;
+            /** End */
+            end: string;
+        };
         /** LoginInput */
         LoginInput: {
             /**
@@ -614,6 +649,21 @@ export interface components {
              * @default America/New_York
              */
             timezone: string;
+        };
+        /** ServiceInput */
+        ServiceInput: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Description */
+            description: string;
+            /** Duration Minutes */
+            duration_minutes: number;
+            /** Price From Cents */
+            price_from_cents: number;
+            /** Active */
+            active: boolean;
         };
         /** SessionCreate */
         SessionCreate: {
@@ -772,6 +822,53 @@ export interface components {
             /** Token */
             token: string;
         };
+        /** WorkspaceInput */
+        WorkspaceInput: {
+            /** Revision */
+            revision: number;
+            /** Name */
+            name: string;
+            /** Timezone */
+            timezone: string;
+            /** Tagline */
+            tagline: string;
+            /**
+             * Theme
+             * @enum {string}
+             */
+            theme: "forest" | "ocean" | "plum";
+            /** Hours */
+            hours: components["schemas"]["HoursInput"][];
+            /** Services */
+            services: components["schemas"]["ServiceInput"][];
+        };
+        /** WorkspaceView */
+        WorkspaceView: {
+            /** Revision */
+            revision: number;
+            /** Name */
+            name: string;
+            /** Timezone */
+            timezone: string;
+            /** Tagline */
+            tagline: string;
+            /**
+             * Theme
+             * @enum {string}
+             */
+            theme: "forest" | "ocean" | "plum";
+            /** Hours */
+            hours: components["schemas"]["HoursInput"][];
+            /** Services */
+            services: components["schemas"]["ServiceInput"][];
+            /** Id */
+            id: string;
+            /**
+             * Policy Review Required
+             * @default false
+             */
+            policy_review_required: boolean;
+        };
     };
     responses: never;
     parameters: never;
@@ -781,6 +878,59 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    read_workspace_api_workspace_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceView"];
+                };
+            };
+        };
+    };
+    update_workspace_api_workspace_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WorkspaceInput"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WorkspaceView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     health_api_health_get: {
         parameters: {
             query?: never;

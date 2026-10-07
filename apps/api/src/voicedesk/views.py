@@ -1,6 +1,6 @@
 """Workspace-scoped API projections; never return private verification hashes."""
 
-from sqlalchemy import select
+from sqlalchemy import case, select
 from sqlalchemy.orm import Session
 
 from voicedesk.domain import stored_utc
@@ -33,7 +33,11 @@ def proposal_view(db: Session, proposal: Proposal) -> ProposalView:
 
 def session_view(db: Session, voice_session: VoiceSession) -> SessionView:
     proposal = db.get(Proposal, voice_session.active_proposal_id) if voice_session.active_proposal_id else None
-    turns = db.scalars(select(TranscriptTurn).where(TranscriptTurn.workspace_id == voice_session.workspace_id, TranscriptTurn.session_id == voice_session.id).order_by(TranscriptTurn.created_at, TranscriptTurn.speaker)).all()
+    turns = db.scalars(select(TranscriptTurn).where(TranscriptTurn.workspace_id == voice_session.workspace_id, TranscriptTurn.session_id == voice_session.id).order_by(
+        TranscriptTurn.created_at,
+        case((TranscriptTurn.speaker == "user", 0), (TranscriptTurn.speaker == "assistant", 1), else_=2),
+        TranscriptTurn.id,
+    )).all()
     events = db.scalars(select(SessionEvent).where(SessionEvent.workspace_id == voice_session.workspace_id, SessionEvent.session_id == voice_session.id).order_by(SessionEvent.created_at)).all()
     return SessionView(
         id=voice_session.id, workspace_id=voice_session.workspace_id, mode=voice_session.mode,

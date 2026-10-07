@@ -12,7 +12,7 @@ from pydantic import BaseModel
 from voicedesk.booking import confirm_proposal
 from voicedesk.config import get_settings
 from voicedesk.db import SessionLocal
-from voicedesk.models import Service, ServiceZone
+from voicedesk.models import Service, ServiceZone, Workspace
 from voicedesk.prompts import TURN_EXTRACTION_V1
 
 
@@ -90,7 +90,7 @@ def _demo_extract(text: str, workspace_id: str) -> ExtractedTurn:
         intent = "other"
     service_id = zone_id = None
     with SessionLocal() as db:
-        for service in db.query(Service).filter(Service.workspace_id == workspace_id):
+        for service in db.query(Service).filter(Service.workspace_id == workspace_id, Service.active.is_(True)):
             if service.name.lower() in lower or service.id.replace("-", " ") in lower:
                 service_id = service.id
                 break
@@ -158,6 +158,16 @@ def _connected_extract(text: str) -> tuple[ExtractedTurn, dict]:
 
 
 def build_semantic_graph(checkpointer):
+    def local_catalogue(workspace_id: str) -> dict:
+        # Local response copy only. This data is never added to provider prompts.
+        with SessionLocal() as db:
+            workspace = db.get(Workspace, workspace_id)
+            return {
+                "name": workspace.name if workspace else "the service desk",
+                "services": [item.name for item in db.query(Service).filter(Service.workspace_id == workspace_id, Service.active.is_(True))],
+                "zones": [item.name for item in db.query(ServiceZone).filter(ServiceZone.workspace_id == workspace_id)],
+            }
+
     def interpret(state: SemanticState) -> dict:
         if state["mode"] == "demo":
             extracted = _demo_extract(state["text"], state["workspace_id"])
@@ -165,6 +175,7 @@ def build_semantic_graph(checkpointer):
         else:
             extracted, usage_event = _connected_extract(state["text"])
         previous = dict(state.get("stable_slots", {}))
+        previous.setdefault("timezone", state.get("timezone", "America/New_York"))
         fresh = extracted.model_dump(exclude_none=True, mode="json")
         intent = extracted.intent
         for key in ("service_id", "zone_id", "exact_date", "exact_time", "timezone", "customer_name", "customer_email", "customer_phone", "booking_reference"):
@@ -202,9 +213,11 @@ def build_semantic_graph(checkpointer):
         if state["extracted"].get("ambiguous_date"):
             reply = "Please say the exact date (YYYY-MM-DD) and timezone so I can check the correct day."
         elif not slots.get("service_id"):
-            reply = "Which service do you need? I can help with boiler, plumbing, electrical, heating, drains, air conditioning, water heater, or home inspection."
+            names = ", ".join(local_catalogue(state["workspace_id"])["services"])
+            reply = f"Which service do you need? Available services: {names}." if names else "No services are currently available. An operator can help."
         elif not slots.get("zone_id"):
-            reply = "Which service zone are you in: North, Central, or South?"
+            names = ", ".join(local_catalogue(state["workspace_id"])["zones"])
+            reply = f"Which service zone are you in: {names}?" if names else "No service zones are configured. An operator can help."
         else:
             reply = "What exact date (YYYY-MM-DD) and timezone would you prefer?"
         return {"reply_text": reply}
@@ -251,7 +264,9 @@ def build_semantic_graph(checkpointer):
         return {"reply_text": "I have the change details. Please complete local verification and explicitly confirm the exact change. Your existing booking remains in place until then."}
 
     def general(state: SemanticState) -> dict:
-        return {"reply_text": "Welcome to Cedar Home Services. Tell me the service and zone you need, or ask about prices and availability."}
+        catalogue = local_catalogue(state["workspace_id"])
+        names = ", ".join(catalogue["services"])
+        return {"reply_text": f"Welcome to {catalogue['name']}. Available services: {names}. Tell me the service and zone you need, or ask about availability."}
 
     builder = StateGraph(SemanticState)
     for name, fn in [("interpret", interpret), ("clarify", clarify), ("policy", policy), ("availability", availability), ("handoff", handoff), ("change", change), ("general", general)]:

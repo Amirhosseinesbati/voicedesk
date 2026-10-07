@@ -13,7 +13,7 @@ function dateAfter(days: number): string {
 test('text session requires confirmation before booking and rejects an invalid management code', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: /Enter workspace/i }).click()
-  await expect(page.getByRole('heading', { name: /Make every conversation count/i })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /Conversation workspace/i })).toBeVisible()
 
   const healthResponse = await page.request.get('/api/health/providers')
   expect(healthResponse.ok()).toBeTruthy()
@@ -40,6 +40,8 @@ test('text session requires confirmation before booking and rejects an invalid m
   await page.getByRole('button', { name: /New text session/i }).click()
   await expect(page.getByText(/Saved transcript/i)).toBeVisible()
   await page.locator('#message').fill(`I need ${service.name} in ${zone.name}. Please check availability.`)
+  await page.getByLabel('Appearance', { exact: true }).selectOption('light')
+  await expect(page.locator('#message')).toHaveValue(`I need ${service.name} in ${zone.name}. Please check availability.`)
   await page.getByRole('button', { name: 'Send message' }).click()
   await expect(page.getByText(`I need ${service.name} in ${zone.name}. Please check availability.`)).toBeVisible()
 
@@ -64,6 +66,9 @@ test('text session requires confirmation before booking and rejects an invalid m
   expect(before.filter((item) => item.customer_email === email)).toHaveLength(0)
 
   await page.getByRole('checkbox', { name: /I confirm these exact appointment details/i }).check()
+  await page.getByLabel('Appearance', { exact: true }).selectOption('dark')
+  await expect(page.getByRole('checkbox', { name: /I confirm these exact appointment details/i })).toBeChecked()
+  await expect(page.getByText('Review before booking')).toBeVisible()
   await page.getByRole('button', { name: /Confirm booking/i }).click()
   await expect(page.getByRole('heading', { name: /It's on the calendar/i })).toBeVisible()
   const code = (await page.locator('.verification-note strong').textContent())?.trim()

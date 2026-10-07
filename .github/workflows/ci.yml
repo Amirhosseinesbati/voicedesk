@@ -43,7 +43,7 @@ jobs:
           src/voicedesk/config.py src/voicedesk/domain.py src/voicedesk/schemas.py
           src/voicedesk/models.py src/voicedesk/calendar.py src/voicedesk/auth.py
           src/voicedesk/seed.py src/voicedesk/audio.py src/voicedesk/knowledge.py
-          src/voicedesk/prompts.py
+          src/voicedesk/prompts.py src/voicedesk/workspace.py
       - run: uv run alembic upgrade head
       - run: uv run pytest -q
 
@@ -64,4 +64,3 @@ jobs:
       - run: pnpm lint
       - run: pnpm typecheck
       - run: pnpm build
-

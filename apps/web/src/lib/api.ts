@@ -12,6 +12,7 @@ import type {
   ReplayFixture,
   Session,
   TurnResponse,
+  WorkspaceConfig,
 } from './types'
 
 let csrfToken = ''
@@ -36,10 +37,12 @@ function errorMessage(payload: unknown, status: number): string {
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   let response: Response
+  const timeout = AbortSignal.timeout(30_000)
   try {
     response = await fetch(path, {
       ...options,
       credentials: 'include',
+      signal: options.signal ? AbortSignal.any([options.signal, timeout]) : timeout,
       headers: {
         ...(options.body ? { 'Content-Type': 'application/json' } : {}),
         ...(options.method && options.method !== 'GET' && csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
@@ -47,11 +50,13 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
       },
     })
   } catch {
+    if (timeout.aborted) throw new ApiError(0, 'The request timed out. It may have reached the server. Retry to check the saved result.')
     throw new ApiError(0, errorMessage(null, 0))
   }
 
   const payload: unknown = response.status === 204 ? null : await response.json().catch(() => null)
   if (!response.ok) throw new ApiError(response.status, errorMessage(payload, response.status))
+  if (response.status !== 204 && payload === null) throw new ApiError(response.status, 'VoiceDesk returned an incomplete response. Retry to check the saved result.')
   return payload as T
 }
 
@@ -68,6 +73,8 @@ export const api = {
     csrfToken = ''
   },
   catalog: () => request<Catalog>('/api/catalog'),
+  workspace: () => request<WorkspaceConfig>('/api/workspace'),
+  saveWorkspace: (config: WorkspaceConfig) => request<WorkspaceConfig>('/api/workspace', { method: 'PUT', body: JSON.stringify({ revision: config.revision, name: config.name, timezone: config.timezone, tagline: config.tagline, theme: config.theme, hours: config.hours, services: config.services }) }),
   knowledge: () => request<{ articles: KnowledgeArticle[] }>('/api/knowledge'),
   providers: () => request<ProviderHealth>('/api/health/providers'),
   replays: () => request<ReplayFixture[]>('/api/replays'),

@@ -30,6 +30,7 @@ from voicedesk.models import (
     SlotHold,
     StaffResource,
     VoiceSession,
+    Workspace,
     utcnow,
 )
 
@@ -57,6 +58,7 @@ def make_proposal(db: Session, voice_session: VoiceSession, payload) -> Proposal
     start = validate_local_instant(payload.start_at, payload.timezone)
     if start <= utcnow():
         raise BookingError("slot_in_past", "Choose a future appointment time.")
+    db.scalar(select(Workspace).where(Workspace.id == voice_session.workspace_id).with_for_update())
     service, _, staff = _calendar._resources(db, voice_session.workspace_id, payload.service_id, payload.zone_id)
     if service.duration_minutes % 15:
         raise BookingError("invalid_duration", "Service duration must align to 15-minute blocks.")
@@ -244,6 +246,7 @@ def confirm_proposal(workspace_id: str, session_id: str, proposal_id: str, versi
     code = None
     try:
         with SessionLocal.begin() as db:
+            db.scalar(select(Workspace).where(Workspace.id == workspace_id).with_for_update())
             voice_session = db.scalar(select(VoiceSession).where(VoiceSession.id == session_id, VoiceSession.workspace_id == workspace_id).with_for_update())
             proposal = db.scalar(select(Proposal).where(Proposal.id == proposal_id, Proposal.workspace_id == workspace_id).with_for_update())
             if not voice_session or not proposal or proposal.session_id != session_id:
@@ -252,6 +255,9 @@ def confirm_proposal(workspace_id: str, session_id: str, proposal_id: str, versi
                 raise BookingError("proposal_stale", "Details changed; review a new proposal before confirming.")
             if stored_utc(proposal.expires_at) <= utcnow():
                 raise BookingError("proposal_expired", "This proposal expired. Check availability again.")
+            service = db.get(Service, proposal.service_id)
+            if not service or stored_utc(proposal.end_at) - stored_utc(proposal.start_at) != timedelta(minutes=service.duration_minutes):
+                raise BookingError("proposal_stale", "Service duration changed; review a new proposal before confirming.")
             db.scalar(select(StaffResource).where(StaffResource.id == proposal.staff_id).with_for_update())
             if not _calendar.is_available(db, workspace_id, proposal.service_id, proposal.zone_id, proposal.staff_id, stored_utc(proposal.start_at), proposal.timezone):
                 raise BookingError("slot_conflict", "The slot was just taken. Please choose an alternative.")

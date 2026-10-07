@@ -25,6 +25,7 @@ class Workspace(Base):
     id: Mapped[str] = mapped_column(String(64), primary_key=True)
     name: Mapped[str] = mapped_column(String(160))
     business_timezone: Mapped[str] = mapped_column(String(64), default="America/New_York")
+    presentation: Mapped[dict] = mapped_column(JSON, default=dict)
 
 
 class User(Base):

@@ -6,8 +6,10 @@ import type { AuthResponse } from './lib/types'
 import { InlineError, Spinner, StatusPill } from './components/ui'
 import { Studio } from './features/studio/Studio'
 import { Operator } from './features/operator/Operator'
+import { WorkspaceSettings } from './features/settings/WorkspaceSettings'
+import { ThemeControl } from './components/ThemeControl'
 
-type Page = 'studio' | 'operator'
+type Page = 'studio' | 'operator' | 'settings'
 
 function Login({ onLogin }: { onLogin: (auth: AuthResponse) => void }) {
   const [email, setEmail] = useState('operator@cedar.example.com')
@@ -15,6 +17,7 @@ function Login({ onLogin }: { onLogin: (auth: AuthResponse) => void }) {
   const login = useMutation({ mutationFn: () => api.login(email, password), onSuccess: onLogin })
 
   return <main className="login-screen">
+    <div className="login-appearance"><ThemeControl /></div>
     <div className="login-story">
       <div className="brand brand-light"><span className="brand-mark"><AudioLines size={22} strokeWidth={2.2} /></span><span><strong>VoiceDesk</strong><small>by Cedar Home Services</small></span></div>
       <div className="login-copy"><span className="eyebrow light">THE FRONT DESK, REIMAGINED</span><h1>Every call, a clear next step.</h1><p>A voice receptionist that listens, checks the calendar, and books only after your customer confirms.</p></div>
@@ -30,6 +33,7 @@ export function App() {
   const [page, setPage] = useState<Page>('studio')
   const auth = useQuery({ queryKey: ['auth'], queryFn: api.me, retry: false })
   const health = useQuery({ queryKey: ['providers'], queryFn: api.providers, enabled: !!auth.data, refetchInterval: 30_000 })
+  const workspace = useQuery({ queryKey: ['workspace'], queryFn: api.workspace, enabled: !!auth.data })
   const logout = useMutation({ mutationFn: api.logout, onSettled: () => { sessionStorage.removeItem('voicedesk_session_id'); queryClient.clear(); setPage('studio') } })
 
   if (auth.isPending) return <div className="app-loading"><span className="brand-mark"><AudioLines size={22} /></span><Spinner label="Opening VoiceDesk" /></div>
@@ -42,11 +46,11 @@ export function App() {
   const liveReady = health.data?.audio.status === 'ready' && health.data.model.status === 'ready'
   const liveConfigured = ['ready', 'unverified'].includes(health.data?.audio.status ?? '') && ['ready', 'unverified'].includes(health.data?.model.status ?? '')
 
-  return <div className="app-shell">
+  return <div className={`app-shell theme-${workspace.data?.theme ?? 'forest'}`}>
     <a className="skip-link" href="#main-content">Skip to content</a>
-    <header className="topbar"><div className="topbar-inner"><div className="brand"><span className="brand-mark"><AudioLines size={21} strokeWidth={2.1} /></span><span><strong>VoiceDesk</strong><small>CEDAR HOME SERVICES</small></span></div><nav className="primary-nav" aria-label="Main navigation"><button className={page === 'studio' ? 'active' : ''} type="button" onClick={() => setPage('studio')} aria-current={page === 'studio' ? 'page' : undefined}><Headphones size={17} />Demo studio</button><button className={page === 'operator' ? 'active' : ''} type="button" onClick={() => setPage('operator')} aria-current={page === 'operator' ? 'page' : undefined}><CalendarDays size={17} />Operator console</button></nav><div className="topbar-actions"><StatusPill status={health.isError ? 'error' : liveReady ? 'ready' : liveConfigured ? 'unverified' : health.data?.mode === 'connected' ? 'missing_config' : 'simulated'} label={health.isError ? 'Status unavailable' : liveReady ? 'Voice ready' : liveConfigured ? 'Voice configured' : health.data?.mode === 'connected' ? 'Voice needs setup' : 'Demo mode'} /><div className="user-chip" title={`${user.email} · ${user.role}`}><span className="user-avatar">{user.email[0]?.toUpperCase() ?? 'C'}</span><span className="user-label">{user.role}</span></div><button className="icon-button signout" type="button" onClick={() => logout.mutate()} disabled={logout.isPending} title="Sign out" aria-label="Sign out"><LogOut size={17} /></button></div></div></header>
-    <div className="demo-banner"><div className="demo-banner-inner"><span><Sprout size={15} aria-hidden="true" /> Synthetic demo dataset · No messages are sent to real customers</span><span className="banner-side"><Activity size={14} aria-hidden="true" /> {liveConfigured ? 'Voice provider configured · call status shown in studio' : 'Text demo available · live audio requires configuration'}</span></div></div>
-    <main id="main-content" className="main-content">{page === 'studio' ? <Studio health={health.data} userRole={user.role} onOpenOperator={() => setPage('operator')} /> : <Operator health={health.data} userRole={user.role} />}</main>
-    <footer className="app-footer"><span>VoiceDesk / Cedar Home Services</span><span>Independent portfolio project · Synthetic demo dataset</span></footer>
+    <header className="topbar"><div className="topbar-inner"><div className="brand"><span className="brand-mark"><AudioLines size={21} strokeWidth={2.1} /></span><span><strong>VoiceDesk</strong><small>{workspace.data?.name ?? user.workspace_id}</small></span></div><nav className="primary-nav" aria-label="Main navigation"><button className={page === 'studio' ? 'active' : ''} type="button" onClick={() => setPage('studio')} aria-current={page === 'studio' ? 'page' : undefined}><Headphones size={17} />Demo studio</button><button className={page === 'operator' ? 'active' : ''} type="button" onClick={() => setPage('operator')} aria-current={page === 'operator' ? 'page' : undefined}><CalendarDays size={17} />Operator console</button><button className={page === 'settings' ? 'active' : ''} type="button" onClick={() => setPage('settings')} aria-current={page === 'settings' ? 'page' : undefined}><ShieldCheck size={17} />Workspace settings</button></nav><div className="topbar-actions"><ThemeControl /><StatusPill status={health.isError ? 'error' : liveReady ? 'ready' : liveConfigured ? 'unverified' : health.data?.mode === 'connected' ? 'missing_config' : 'simulated'} label={health.isError ? 'Status unavailable' : liveReady ? 'Voice ready' : liveConfigured ? 'Voice configured' : health.data?.mode === 'connected' ? 'Voice needs setup' : 'Demo mode'} /><div className="user-chip" title={`${user.email} · ${user.role}`}><span className="user-avatar">{user.email[0]?.toUpperCase() ?? 'C'}</span><span className="user-label">{user.role}</span></div><button className="icon-button signout" type="button" onClick={() => logout.mutate()} disabled={logout.isPending} title="Sign out" aria-label="Sign out"><LogOut size={17} /></button></div></div></header>
+    <div className="demo-banner"><div className="demo-banner-inner"><span><Sprout size={15} aria-hidden="true" /> {health.data?.mode === 'connected' ? 'Connected workspace · Provider operations use configured integrations' : 'Synthetic demo dataset · No messages are sent to real customers'}</span><span className="banner-side"><Activity size={14} aria-hidden="true" /> {liveConfigured ? 'Voice provider configured · call status shown in studio' : 'Text demo available · live audio requires configuration'}</span></div></div>
+    <main id="main-content" className="main-content">{page === 'studio' ? <Studio workspace={workspace.data} health={health.data} userRole={user.role} onOpenOperator={() => setPage('operator')} /> : page === 'operator' ? <Operator workspace={workspace.data} health={health.data} userRole={user.role} /> : workspace.data ? <WorkspaceSettings config={workspace.data} role={user.role} /> : workspace.isError ? <InlineError message="Workspace configuration could not load." onRetry={() => void workspace.refetch()} /> : <Spinner label="Loading workspace" />}</main>
+    <footer className="app-footer"><span>VoiceDesk / {workspace.data?.name ?? user.workspace_id}</span><span>{health.data?.mode === 'connected' ? 'Connected workspace' : 'Independent portfolio project · Synthetic demo dataset'}</span></footer>
   </div>
 }

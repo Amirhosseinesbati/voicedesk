@@ -2,7 +2,7 @@
 
 > A voice receptionist and booking console for service teams.
 
-![VoiceDesk product interface](docs/screenshots/verified/03-studio-1440.png)
+![VoiceDesk voice operations workspace with synthetic demo data](docs/screenshots/theme-rollout/studio-dark-desktop.png)
 
 [Getting started](#getting-started) · [Architecture](docs/ARCHITECTURE.md) · [Evaluation](docs/EVALUATION.md) · [Security](docs/SECURITY.md)
 
@@ -131,3 +131,9 @@ The studio supports text access to the voice workflow. Audio requires browser mi
 This is a commercial pilot starting point, not an assertion of production readiness. The handover records tested limits and deployment work still required.
 
 
+
+## Configurable voice operations workspace
+
+The studio, operator calendar and admin workspace settings now share a compact Light/Dark/System interface. Read [the appearance rollout](docs/THEME_ROLLOUT.md) for verified scope and [client customization](docs/CLIENT_CUSTOMIZATION.md) for workspace configuration, migration and policy boundaries. Configuration remains role/CSRF protected, bookings require confirmation and retries remain idempotent.
+
+The [light studio](docs/screenshots/theme-rollout/studio-light-desktop.png) and [mobile operator calendar](docs/screenshots/theme-rollout/operator-light-mobile.png) show synthetic records. Live provider behavior and deployment have separate validation requirements.

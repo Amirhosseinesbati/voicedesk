@@ -54,7 +54,8 @@ class LocalCalendar:
         if not within_hours(start, end, selected.weekly_hours.get(day, []), business_timezone):
             return False
         global_hours = [dict(start=row.start_local, end=row.end_local) for row in db.scalars(select(BusinessHours).where(BusinessHours.workspace_id == workspace_id, BusinessHours.weekday == day))]
-        if global_hours and not within_hours(start, end, global_hours, business_timezone):
+        has_business_schedule = db.scalar(select(BusinessHours.id).where(BusinessHours.workspace_id == workspace_id).limit(1)) is not None
+        if has_business_schedule and not within_hours(start, end, global_hours, business_timezone):
             return False
         for blackout in db.scalars(select(Blackout).where(Blackout.workspace_id == workspace_id)):
             if blackout.staff_id in {None, staff_id} and overlaps(start, end, blackout.start_at, blackout.end_at):

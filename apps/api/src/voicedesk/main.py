@@ -81,6 +81,7 @@ from voicedesk.schemas import (
 )
 from voicedesk.stream import router as stream_router
 from voicedesk.views import appointment_view, proposal_view, session_view
+from voicedesk.workspace import router as workspace_router
 
 
 def _uuid() -> str:
@@ -257,10 +258,11 @@ async def request_audit(request: Request, call_next):
 
 app.add_middleware(
     CORSMiddleware, allow_origins=[item.strip() for item in get_settings().cors_origins.split(",")],
-    allow_credentials=True, allow_methods=["GET", "POST", "PATCH", "DELETE"],
+    allow_credentials=True, allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],
     allow_headers=["Content-Type", "X-CSRF-Token", "X-Request-ID"],
 )
 app.include_router(stream_router)
+app.include_router(workspace_router)
 
 
 @app.exception_handler(DomainError)
@@ -362,8 +364,11 @@ def create_session(payload: SessionCreate, user: User = Depends(operator_user), 
         raise HTTPException(400, "Session mode must match the server's configured mode.")
     if payload.mode == "connected" and not get_settings().openai_api_key:
         raise HTTPException(503, "Connected sessions require OPENAI_API_KEY.")
+    from voicedesk.models import Workspace
+    workspace = db.get(Workspace, user.workspace_id)
     record = VoiceSession(id=_uuid(), workspace_id=user.workspace_id, created_by_user_id=user.id,
                           mode=payload.mode, channel=payload.channel, status="active",
+                          timezone=workspace.business_timezone if workspace else "America/New_York",
                           stable_slots={}, tentative_slots={})
     db.add(record)
     db.commit()
@@ -389,7 +394,8 @@ def process_turn(db: Session, voice_session: VoiceSession, payload: TurnInput, g
             raise BookingError("turn_conflict", "This turn ID is already processing or has different text.")
         return TurnResult(session=session_view(db, voice_session), turn=next(item for item in session_view(db, voice_session).turns if item.id == previous.id), reply_text=assistant.text)
     user_turn = TranscriptTurn(id=_uuid(), workspace_id=voice_session.workspace_id, session_id=voice_session.id,
-                               turn_id=payload.turn_id, speaker="user", text=_redact_verification_code(payload.text), source=payload.source)
+                               turn_id=payload.turn_id, speaker="user", text=_redact_verification_code(payload.text), source=payload.source,
+                               created_at=datetime.now(timezone.utc))
     db.add(user_turn)
     verification_code = None
     confirm_words = bool(re.match(r"^\s*(yes|confirm|i confirm|that's correct|that is correct)\b", payload.text, re.I))

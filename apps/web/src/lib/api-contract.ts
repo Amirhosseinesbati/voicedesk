@@ -11,6 +11,7 @@ import type {
   Session,
   TranscriptTurn,
   TurnResponse,
+  WorkspaceConfig,
 } from './types'
 
 type ApiSchema = components['schemas']
@@ -30,4 +31,6 @@ export type ApiContractChecks = [
   Expect<Assignable<Appointment, ApiSchema['AppointmentView']>>,
   Expect<Assignable<ConfirmResponse, ApiSchema['AppointmentResult']>>,
   Expect<Assignable<Handoff, ApiSchema['HandoffView']>>,
+  Expect<Assignable<WorkspaceConfig, ApiSchema['WorkspaceView']>>,
+  Expect<Assignable<Omit<WorkspaceConfig, 'id' | 'policy_review_required'>, ApiSchema['WorkspaceInput']>>,
 ]

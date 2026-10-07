@@ -21,6 +21,19 @@ export interface Service {
   base_price_cents?: number
   price_from_cents?: number
   price_policy?: string
+  eligible_zone_ids?: string[]
+}
+
+export interface WorkspaceConfig {
+  id: string
+  revision: number
+  policy_review_required: boolean
+  name: string
+  timezone: string
+  tagline: string
+  theme: 'forest' | 'ocean' | 'plum'
+  hours: { day: 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'; closed: boolean; start: string; end: string }[]
+  services: { id: string; name: string; description: string; duration_minutes: number; price_from_cents: number; active: boolean }[]
 }
 
 export interface Zone {

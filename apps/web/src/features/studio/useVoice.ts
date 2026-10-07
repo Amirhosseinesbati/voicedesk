@@ -70,6 +70,7 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
   const modeRef = useRef<'connected' | 'replay'>('connected')
   const deliberateStopRef = useRef(false)
   const lastMeterUpdateRef = useRef(0)
+  const connectionTokenRef = useRef(0)
 
   useEffect(() => { callbackRef.current = onServerEvent }, [onServerEvent])
 
@@ -98,10 +99,12 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
     streamRef.current = null
     void inputContextRef.current?.close()
     inputContextRef.current = null
+    samplesRef.current = []
     setLevel(0)
   }, [])
 
   const stop = useCallback(() => {
+    connectionTokenRef.current += 1
     deliberateStopRef.current = true
     if (socketRef.current?.readyState === WebSocket.OPEN) socketRef.current.send(JSON.stringify({ type: 'stop' }))
     socketRef.current?.close(1000, 'User ended session')
@@ -111,6 +114,9 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
     currentUserTurnRef.current = null
     activeAssistantTurnRef.current = null
     samplesRef.current = []
+    mutedRef.current = false
+    setMuted(false)
+    ignoredTurnsRef.current.clear()
     void outputContextRef.current?.close()
     outputContextRef.current = null
     setStatus('idle')
@@ -122,7 +128,7 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
     stopPlayback()
     if (socketRef.current?.readyState === WebSocket.OPEN) socketRef.current.send(JSON.stringify({ type: 'interrupt', turn_id: activeAssistantTurnRef.current }))
     activeAssistantTurnRef.current = null
-    setStatus(modeRef.current === 'replay' ? 'replay' : 'listening')
+    if (socketRef.current?.readyState === WebSocket.OPEN) setStatus(modeRef.current === 'replay' ? 'replay' : 'listening')
   }, [stopPlayback])
 
   const playChunk = useCallback(async (audio: string, turnId?: string) => {
@@ -171,6 +177,8 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
 
   const connect = useCallback(async (sessionId: string, mode: 'connected' | 'replay') => {
     stop()
+    const connectionToken = connectionTokenRef.current
+    const isCurrent = () => connectionToken === connectionTokenRef.current
     deliberateStopRef.current = false
     modeRef.current = mode
     setStatus('connecting')
@@ -180,6 +188,7 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
       if (mode === 'connected') {
         if (!navigator.mediaDevices?.getUserMedia || !window.AudioWorkletNode) throw new Error('This browser does not support live microphone streaming. Use the text alternative.')
         media = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: false })
+        if (!isCurrent()) { media.getTracks().forEach((track) => track.stop()); return }
         streamRef.current = media
       }
       const url = new URL(`/api/sessions/${encodeURIComponent(sessionId)}/stream`, window.location.href)
@@ -187,6 +196,7 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
       const socket = new WebSocket(url)
       socketRef.current = socket
       socket.onmessage = (message) => {
+        if (!isCurrent() || socketRef.current !== socket) return
         let event: ServerEvent
         try { event = JSON.parse(message.data as string) as ServerEvent } catch { return }
         if (event.turn_id && ignoredTurnsRef.current.has(event.turn_id) && event.type === 'audio_chunk') return
@@ -200,35 +210,48 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
         } else if (event.type === 'error') {
           setError(event.detail || event.message || 'The audio connection failed.')
           setStatus('error')
+          releaseMedia()
+          stopPlayback()
+          socket.close(1000, 'Server reported an audio error')
         } else if (event.type === 'done') {
           if (sourcesRef.current.size === 0) setStatus(mode === 'replay' ? 'replay' : 'listening')
         }
         callbackRef.current(event)
       }
-      socket.onerror = () => { setError('Voice connection failed. Try again or use text.'); setStatus('error') }
+      let failed = false
+      socket.onerror = () => { if (!isCurrent()) return; failed = true; setError('Voice connection failed. Reconnect or continue with text.'); setStatus('error'); releaseMedia(); stopPlayback() }
       socket.onclose = () => {
+        if (!isCurrent() || socketRef.current !== socket) return
         releaseMedia()
         stopPlayback()
         socketRef.current = null
-        if (!deliberateStopRef.current) setStatus('disconnected')
+        currentUserTurnRef.current = null
+        if (!deliberateStopRef.current && !failed) setStatus('disconnected')
       }
       await new Promise<void>((resolve, reject) => {
-        socket.onopen = () => resolve()
+        const timer = window.setTimeout(() => { socket.close(); reject(new Error('Audio connection timed out. Reconnect or continue with text.')) }, 12_000)
+        socket.onopen = () => { window.clearTimeout(timer); resolve() }
         const initialError = socket.onerror
-        socket.onerror = (event) => { initialError?.call(socket, event); reject(new Error('Could not establish a voice connection.')) }
+        socket.onerror = (event) => { window.clearTimeout(timer); initialError?.call(socket, event); reject(new Error('Could not establish a voice connection.')) }
+        const initialClose = socket.onclose
+        socket.onclose = (event) => { window.clearTimeout(timer); initialClose?.call(socket, event); reject(new Error('Audio disconnected before it was ready. Reconnect or continue with text.')) }
       })
+      if (!isCurrent()) { socket.close(); return }
       if (mode === 'replay') { setStatus('replay'); return }
       socket.send(JSON.stringify({ type: 'start' }))
 
       const context = new AudioContext()
       inputContextRef.current = context
       await context.audioWorklet.addModule('/audio-capture-worklet.js')
+      if (!isCurrent()) return
+      if (context.state === 'suspended') await context.resume()
       const source = context.createMediaStreamSource(media!)
       const processor = new AudioWorkletNode(context, 'voicedesk-capture')
       inputNodeRef.current = processor
       source.connect(processor)
       processor.connect(context.destination)
       processor.port.onmessage = (event: MessageEvent<Float32Array>) => {
+        if (!isCurrent()) return
         const input = event.data
         if (mutedRef.current || socket.readyState !== WebSocket.OPEN) return
         const samples = downsample(input, context.sampleRate)
@@ -249,10 +272,12 @@ export function useVoice(onServerEvent: (event: ServerEvent) => void) {
       setStatus('listening')
     } catch (cause) {
       media?.getTracks().forEach((track) => track.stop())
+      if (!isCurrent()) return
       socketRef.current?.close()
       socketRef.current = null
       releaseMedia()
-      const message = cause instanceof Error ? cause.message : 'Could not start microphone.'
+      const name = cause instanceof Error ? cause.name : ''
+      const message = name === 'NotAllowedError' ? 'Microphone access was denied. Enable it in your browser, or continue with text.' : name === 'NotFoundError' ? 'No microphone was found. Connect a microphone, or continue with text.' : name === 'NotReadableError' ? 'Your microphone is in use or unavailable. Close other audio apps and retry, or use text.' : cause instanceof Error ? cause.message : 'Could not start microphone.'
       setError(message)
       setStatus('error')
       throw cause

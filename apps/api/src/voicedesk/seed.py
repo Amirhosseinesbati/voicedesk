@@ -7,6 +7,8 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from sqlalchemy import select
+
 from voicedesk.auth import hash_password
 from voicedesk.config import get_settings
 from voicedesk.db import SessionLocal
@@ -89,7 +91,11 @@ def seed() -> dict[str, int]:
     data = load_dataset()
     counts: dict[str, int] = {}
     with SessionLocal.begin() as db:
+        customized = {workspace.id for workspace in db.scalars(select(Workspace))
+                      if (workspace.presentation or {}).get("revision", 0) > 0}
         for item in data["workspaces"]:
+            if item["id"] in customized:
+                continue
             db.merge(Workspace(id=item["id"], name=item["name"], business_timezone=item.get("business_timezone", data.get("metadata", {}).get("timezone", "America/New_York"))))
         db.flush()
         accounts = [
@@ -102,6 +108,8 @@ def seed() -> dict[str, int]:
             if not db.get(User, user_id):
                 db.add(User(id=user_id, workspace_id=workspace_id, email=email, role=role, password_hash=hash_password("DemoVoiceDesk2026!")))
         for item in data["services"]:
+            if item.get("workspace_id", "cedar-demo") in customized:
+                continue
             db.merge(Service(
                 id=item["id"], workspace_id=item.get("workspace_id", "cedar-demo"), name=item["name"],
                 description=item.get("description", ""), duration_minutes=item["duration_minutes"],
@@ -121,6 +129,8 @@ def seed() -> dict[str, int]:
             hours_data = [{"weekday": day, **interval} for day, intervals in hours_data.items() for interval in intervals]
         for index, item in enumerate(hours_data):
             if isinstance(item, dict) and "weekday" in item:
+                if item.get("workspace_id", "cedar-demo") in customized:
+                    continue
                 db.merge(BusinessHours(id=item.get("id", f"cedar-hours-{index}"), workspace_id=item.get("workspace_id", "cedar-demo"), weekday=item["weekday"], start_local=item.get("start", item.get("start_local", "08:00")), end_local=item.get("end", item.get("end_local", "17:00"))))
         for index, item in enumerate(data.get("blackouts", [])):
             db.merge(Blackout(id=item.get("id", f"blackout-{index}"), workspace_id=item.get("workspace_id", "cedar-demo"), staff_id=item.get("staff_id"), start_at=parse_instant(item["start_at"]), end_at=parse_instant(item["end_at"]), reason=item.get("reason", "Unavailable")))
